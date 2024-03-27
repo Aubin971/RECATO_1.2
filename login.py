@@ -1,7 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets, QtTest
 from defin_recto2 import lire_csv_recto
 from subprocess import*
-import cv2
 from def_2ndmail import*
 from def_1stmail import*
 import subprocess
@@ -43,6 +42,7 @@ except:
     print('installing cv2 module')
     subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'opencv-python'])
     print('done')
+    import cv2
 
 from tkinter import messagebox #tkinter n'as pas de pip installcar il est déjà présent dans python
 
