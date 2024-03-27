@@ -225,7 +225,8 @@ def load_info_config_id():
             data = json.load(file)
             return data.get("info", "info")
     except FileNotFoundError:
-        return "info"
+        messagebox.showwarning("Input Error",'''You are not already connected to an account, do it directly on CATO''')
+        exit()
     
 current_id = load_info_config_id()
 
