@@ -4,8 +4,8 @@ from subprocess import*
 from def_2ndmail import*
 from def_1stmail import*
 import subprocess
-from subprocess import call, sys
-from info_cato import get_password
+from subprocess import call
+from info_cato import get_password, id_exists
 
 #Partie des verifications
 #on verifie que l'on possede bien les modules
@@ -168,11 +168,13 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def cliclogin(self):
-        if self.loglineEdit.text() == get_password(self.email_list):
-            MainWindow.hide()
-            QtCore.QTimer.singleShot(0, MainWindow.close)
-            os.remove("addresse_mailset.rct")
-            call(["python", "Bibliothèque.py"])
+        #if self.loglineEdit.text() == get_password(self.email_list):
+        if id_exists(self.email_list):
+            if self.loglineEdit.text() == load_info_config_psw:
+                MainWindow.hide()
+                QtCore.QTimer.singleShot(0, MainWindow.close)
+                os.remove("addresse_mailset.rct")
+                call(["python", "Bibliothèque.py"])
         else:
             if self.cote == 2:
                 os.remove("addresse_mailset.rct")
@@ -221,6 +223,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "RECTO"))
 import ressources_Cglobales_rc
 
+#cherche l'addressemail
 info_config_id = "info.json"
 
 def load_info_config_id():
@@ -228,6 +231,15 @@ def load_info_config_id():
         with open(info_config_id, "r") as file:
             data = json.load(file)
             return data.get("info", "info")
+    except FileNotFoundError:
+        messagebox.showwarning("Input Error",'''You are not already connected to an account, do it directly on CATO''')
+        exit()
+
+def load_info_config_psw():
+    try:
+        with open(info_config_id, "r") as file:
+            data = json.load(file)
+            return data.get("info_1", "info")
     except FileNotFoundError:
         messagebox.showwarning("Input Error",'''You are not already connected to an account, do it directly on CATO''')
         exit()
