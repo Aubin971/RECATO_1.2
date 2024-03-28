@@ -1,11 +1,7 @@
-from PyQt5 import QtCore, QtGui, QtWidgets, QtTest
-from defin_recto2 import lire_csv_recto
-from subprocess import*
-from def_2ndmail import*
-from def_1stmail import*
-import subprocess
 from subprocess import call
-from info_cato import get_password, id_exists
+from subprocess import*
+import subprocess
+import sys
 
 #Partie des verifications
 #on verifie que l'on possede bien les modules
@@ -28,7 +24,7 @@ try:
     import PyQt5
 except:
     print('installing PyQt5 module')
-    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'PyQt5'])
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'pytq5'])
     print('done')
 try:
     import steganocryptopy
@@ -44,6 +40,13 @@ except:
     print('done')
     import cv2
 
+
+from PyQt5 import QtCore, QtGui, QtWidgets, QtTest
+from defin_recto2 import lire_csv_recto
+from subprocess import*
+from def_2ndmail import*
+from def_1stmail import*
+import info_cato
 from tkinter import messagebox #tkinter n'as pas de pip installcar il est déjà présent dans python
 
 #----------maintenant on installe la police
@@ -160,7 +163,7 @@ class Ui_MainWindow(object):
         self.message_bleu.hide()
         self.nd_message.hide()
         self.error01.hide()
-        self.email_list= (load_info_config_id())
+        self.email_list= (current_id)
         self.pswd = (lire_csv_recto("recto_mail_.csv"))[0]
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -169,15 +172,17 @@ class Ui_MainWindow(object):
 
     def cliclogin(self):
         #if self.loglineEdit.text() == get_password(self.email_list):
-        if id_exists(self.email_list):
-            if self.loglineEdit.text() == load_info_config_psw:
-                MainWindow.hide()
-                QtCore.QTimer.singleShot(0, MainWindow.close)
-                os.remove("addresse_mailset.rct")
-                call(["python", "Bibliothèque.py"])
+        id = current_id
+        pawd = info_cato.get_password(id)
+    
+        # Ensure text comparison is working as expected
+        input_text = self.loglineEdit.text().strip()  # Remove leading/trailing whitespaces
+        if input_text == pawd:
+            MainWindow.hide()
+            QtCore.QTimer.singleShot(0, MainWindow.close)
+            call(["python", "Bibliothèque.py"])
         else:
             if self.cote == 2:
-                os.remove("addresse_mailset.rct")
                 self.showerror01()
                 MainWindow.update()
                 cam = cv2.VideoCapture(0)
@@ -195,7 +200,6 @@ class Ui_MainWindow(object):
                 self.cote=0
             else:
                 self.cote+=1
-                os.remove("addresse_mailset.rct")
                 self.loglineEdit.setText(f'FAUX  encore {3-self.cote} essais')
 
     def showerror01(self):
@@ -234,6 +238,8 @@ def load_info_config_id():
     except FileNotFoundError:
         messagebox.showwarning("Input Error",'''You are not already connected to an account, do it directly on CATO''')
         exit()
+
+current_id = load_info_config_id()
 
 def load_info_config_psw():
     try:
