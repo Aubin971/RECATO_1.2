@@ -168,21 +168,25 @@ class Ui_carte(QFileDialog):
 
         def browsefiles(self):
                 self.fname=QFileDialog.getOpenFileName(self, 'Open file', os.getcwd(), ("*.png *.rct"))
-                if self.fname[-5:-4] > fetched_level:
-                        messagebox.showwarning("Input Error", "This file too secured for your level")
-                else:
-                        try:
-                                self.carte = lire_csv_recto(self.fname[0])
-                                self.pseudolineEdit.setText(self.carte[0])
-                                self.emaillineEdit.setText(self.carte[1])
-                                self.passwordlineEdit.setText(self.carte[2])
-                                self.lienlineEdit.setText(self.carte[3])
-                                self.infostextEdit.setText(self.carte[4])
-                                self.titre_carte.setText((os.path.basename(self.fname[0])).split('.')[0])
-                        except TypeError:
-                                messagebox.showwarning("Input Error", "This file is empty !")
-                        except :
-                                messagebox.showwarning("Input Error", "Please choose a .PNG file !")
+                print(self.fname[0][-9:-8])
+                try:
+                        if int(self.fname[0][-9:-8]) > fetched_level:
+                                messagebox.showwarning("Input Error", "This file too secured for your level")
+                        else:
+                                try:
+                                        self.carte = lire_csv_recto(self.fname[0])
+                                        self.pseudolineEdit.setText(self.carte[0])
+                                        self.emaillineEdit.setText(self.carte[1])
+                                        self.passwordlineEdit.setText(self.carte[2])
+                                        self.lienlineEdit.setText(self.carte[3])
+                                        self.infostextEdit.setText(self.carte[4])
+                                        self.titre_carte.setText((os.path.basename(self.fname[0])).split('.')[0])
+                                except TypeError:
+                                        messagebox.showwarning("Input Error", "This file is empty !")
+                                except :
+                                        messagebox.showwarning("Input Error", "Please choose a .PNG file !")
+                except ValueError:
+                       messagebox.showwarning("Input Error", "This file is not compatible, there is no securisation level")
         def save(self):
                 if self.lockmode.value() > fetched_level:
                         messagebox.YES = 'proced'
@@ -191,24 +195,29 @@ class Ui_carte(QFileDialog):
                                 enregistrer_carte((self.titre_carte.text()),(self.pseudolineEdit.text()),
                                                 (self.emaillineEdit.text()),(self.passwordlineEdit.text()),
                                                 (self.lienlineEdit.text()),(self.infostextEdit.toPlainText()),(self.lockmode.value()))
-                                exit()
+                                MainWindow.hide()
+                                QtCore.QTimer.singleShot(0, MainWindow.close)
                         else:
                                pass
                 else:
                         enregistrer_carte((self.titre_carte.text()),(self.pseudolineEdit.text()),
                                                 (self.emaillineEdit.text()),(self.passwordlineEdit.text()),
                                                 (self.lienlineEdit.text()),(self.infostextEdit.toPlainText()),(self.lockmode.value()))
-                        exit()
+                        MainWindow.hide()
+                        QtCore.QTimer.singleShot(0, MainWindow.close)
 
         def clicundo(self):
-                if self.titre_carte.text() == (os.path.basename(self.fname[0])).split('.')[0]:
-                        self.pseudolineEdit.setText(self.carte[0])
-                        self.emaillineEdit.setText(self.carte[1])
-                        self.passwordlineEdit.setText(self.carte[2])
-                        self.lienlineEdit.setText(self.carte[3])
-                        self.infostextEdit.setText(self.carte[4])
-                else:
-                      messagebox.showwarning("Input Error", "Save your card before using the undo button") 
+                try:
+                        if self.titre_carte.text() == (os.path.basename(self.fname[0])).split('.')[0]:
+                                self.pseudolineEdit.setText(self.carte[0])
+                                self.emaillineEdit.setText(self.carte[1])
+                                self.passwordlineEdit.setText(self.carte[2])
+                                self.lienlineEdit.setText(self.carte[3])
+                                self.infostextEdit.setText(self.carte[4])
+                        else:
+                                messagebox.showwarning("Input Error", "Save your card before using the undo button") 
+                except AttributeError:
+                       pass
                 
                 
         def retranslateUi(self, MainWindow):
@@ -225,8 +234,7 @@ def load_info_config_id():
             data = json.load(file)
             return data.get("info", "info")
     except FileNotFoundError:
-        messagebox.showwarning("Input Error",'''You are not already connected to an account, do it directly on CATO''')
-        exit()
+        return "info"
     
 current_id = load_info_config_id()
 
@@ -242,9 +250,10 @@ def fetch_cell_value(row_num, col_name):
 row_id = current_id
 column_name = 'level'  
 
-try :
-        fetched_level = int(fetch_cell_value(row_id, column_name))
-        #On actionne la fenêtre
+#try :
+fetched_level = int(fetch_cell_value(row_id, column_name))
+#On actionne la fenêtre
+try:
         if __name__ == "__main__":
                 import sys
                 app = QtWidgets.QApplication(sys.argv)
