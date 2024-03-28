@@ -144,7 +144,7 @@ def enregistrer_carte(namedoss,pseudo,email,password,lien,infos,secur):
         except:
             pass
     else :
-        namedoss+=secur+'.rct'
+        namedoss+=str(secur)+'.rct'
     with open(namedoss, mode="w") as csvfile :
         toutes = {'pseudo' :pseudo, 'email' :email, 'password' :password, 'lien' :lien, 'infos' :infos}
         cryptage(toutes)
