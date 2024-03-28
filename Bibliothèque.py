@@ -46,6 +46,19 @@ class Ui_MainWindow(object):
         self.to_blibiotheque.setObjectName("to_blibiotheque")
         self.to_blibiotheque.clicked.connect(self.passerbibliotheque)
         self.to_blibiotheque.setProperty('class','blackbordd')
+        #Big labels
+        self.genlabel = QtWidgets.QLabel(self.centralwidget)
+        self.genlabel.setGeometry(QtCore.QRect(649,0,153,650))
+        self.genlabel.setStyleSheet(("QLabel{\n"
+                                "background-image: url(:/tout/png_of_recato/blue parton.png);\n"
+                                "border : none;\n"
+                                "}"))
+        self.liblabel = QtWidgets.QLabel(self.centralwidget)
+        self.liblabel.setGeometry(QtCore.QRect(865,0,153,650))
+        self.liblabel.setStyleSheet(("QLabel{\n"
+                                "background-image: url(:/tout/png_of_recato/roseon.png);\n"
+                                "border : none;\n"
+                                "}"))
         #BIBLIOTHEQUE
         self.manipuler = QtWidgets.QPushButton(self.centralwidget)
         self.manipuler.setGeometry(QtCore.QRect(190, 310, 301, 50))
@@ -233,6 +246,7 @@ class Ui_MainWindow(object):
         self.code_bar.setObjectName("code_bar")
         self.a=(-2)
         self.memo=[]
+        self.genlabel.hide()
         self.cara.hide()
         self.majuscule.hide()
         self.spinBox.hide()
@@ -264,6 +278,7 @@ class Ui_MainWindow(object):
         self.window.show()
 
     def passergenerateur(self):
+        self.genlabel.show()
         self.genererlineEdit.show()
         self.generer.show()
         self.symboles.show()
@@ -279,9 +294,13 @@ class Ui_MainWindow(object):
         self.cara.show()
         self.majuscule.show()
         self.spinBox.show()
+        self.liblabel.hide()
         self.manipuler.hide()
+        
 
     def passerbibliotheque(self):
+        self.liblabel.show()
+        self.genlabel.hide()
         self.genererlineEdit.hide()
         self.generer.hide()
         self.symboles.hide()
