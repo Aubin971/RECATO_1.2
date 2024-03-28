@@ -168,7 +168,6 @@ class Ui_carte(QFileDialog):
 
         def browsefiles(self):
                 self.fname=QFileDialog.getOpenFileName(self, 'Open file', os.getcwd(), ("*.png *.rct"))
-                print(self.fname[0][-9:-8])
                 try:
                         if int(self.fname[0][-9:-8]) > fetched_level:
                                 messagebox.showwarning("Input Error", "This file too secured for your level")
@@ -180,7 +179,7 @@ class Ui_carte(QFileDialog):
                                         self.passwordlineEdit.setText(self.carte[2])
                                         self.lienlineEdit.setText(self.carte[3])
                                         self.infostextEdit.setText(self.carte[4])
-                                        self.titre_carte.setText((os.path.basename(self.fname[0])).split('.')[0])
+                                        self.titre_carte.setText(((os.path.basename(self.fname[0])).split('.')[0])[0:-1])
                                 except TypeError:
                                         messagebox.showwarning("Input Error", "This file is empty !")
                                 except :
@@ -253,15 +252,12 @@ column_name = 'level'
 #try :
 fetched_level = int(fetch_cell_value(row_id, column_name))
 #On actionne la fenêtre
-try:
-        if __name__ == "__main__":
-                import sys
-                app = QtWidgets.QApplication(sys.argv)
-                MainWindow = QtWidgets.QMainWindow()
-                ui = Ui_carte()
-                ui.setupUi(MainWindow)
-                MainWindow.show()
-                sys.exit(app.exec_())
 
-except:
-        messagebox.showwarning("Input Error",'''there is no existing account like your's or it doesn't have a level''')
+if __name__ == "__main__":
+        import sys
+        app = QtWidgets.QApplication(sys.argv)
+        MainWindow = QtWidgets.QMainWindow()
+        ui = Ui_carte()
+        ui.setupUi(MainWindow)
+        MainWindow.show()
+        sys.exit(app.exec_())
